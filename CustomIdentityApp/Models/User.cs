@@ -9,5 +9,6 @@ namespace CustomIdentityApp.Models
     public class User : IdentityUser
     {
         public int Year { get; set; }
+        public string Description { get; set; }
     }
 }
