@@ -44,6 +44,7 @@ namespace CustomIdentityApp
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
