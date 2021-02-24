@@ -27,10 +27,20 @@ namespace CustomIdentityApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationContext>(options => 
-                options.UseSqlServer(Configuration.GetConnectionString("IdentityTestDbConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("IdentityTestDbConnection_CLR05D4")));
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationContext>();
+
+            services.Configure<IdentityOptions>(options => {
+                options.Password.RequiredLength = 3;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = false;
+
+                options.User.RequireUniqueEmail = true;
+            });
 
             services.AddControllersWithViews();
         }
