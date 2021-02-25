@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace CustomIdentityApp.Controllers
 {
-    public class UserController : Controller
+    public class UsersController : Controller
     {
         private readonly UserManager<User> _userManager;
 
-        public UserController(UserManager<User> userManager)
+        public UsersController(UserManager<User> userManager)
         {
             _userManager = userManager;
         }

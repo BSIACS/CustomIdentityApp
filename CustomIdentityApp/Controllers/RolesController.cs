@@ -1,4 +1,5 @@
 ﻿using CustomIdentityApp.Models;
+using CustomIdentityApp.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -59,5 +60,52 @@ namespace CustomIdentityApp.Controllers
             else
                 return NotFound();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id) {
+            User user = await _userManager.FindByIdAsync(id);
+
+            if (user is null) {
+                return NotFound();
+            }
+
+            IList<string> userRoles = await _userManager.GetRolesAsync(user);
+
+            var allRoles = _roleManager.Roles.ToList();
+
+            ChangeRoleViewModel viewModel = new ChangeRoleViewModel { 
+                UserId = user.Id, 
+                UserEmail = user.Email, 
+                AllRoles = allRoles, 
+                UserRoles = userRoles };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(string userId, List<string> roles) {
+            User user = await _userManager.FindByIdAsync(userId);
+
+            if (user is null)
+                return BadRequest();
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var allRoles = _roleManager.Roles.ToList();
+
+            var addedRoles = roles.Except(userRoles);
+
+            var removedRoles = userRoles.Except(roles);
+
+            await _userManager.AddToRolesAsync(user, addedRoles);
+
+            await _userManager.RemoveFromRolesAsync(user, removedRoles);
+
+            return RedirectToAction("Index");
+        }
+
+
+
+
     }
 }
